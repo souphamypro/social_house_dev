@@ -22,7 +22,8 @@ const JoinNowModal: FC<IProps> = ({ setOpenModal, waitlistEvent }) => {
 
     return (
         <div className="modalBackground">
-            {isAuthenticated ? <div className="modalContainer">
+            {/* {isAuthenticated ?  */}
+            <div className="modalContainer">
                 <button className="titleCloseBtn"
                     onClick={() => {
                         setOpenModal(false);
@@ -65,20 +66,14 @@ const JoinNowModal: FC<IProps> = ({ setOpenModal, waitlistEvent }) => {
                         <button className="btn-black-back w-auto" onClick={() => { waitlistEvent() }}>WAITLIST</button>
                     </div>
                 </div>
-            </div> : <div className="modalContainer">
-                <button className="titleCloseBtn"
-                    onClick={() => {
-                        setOpenModal(false);
-                    }}
-                >X</button>
-                <Container id="loginform">
-                    <Col lg="8" md="6" sm="9" xs="12" className='m-auto'>
-                        <div className="d-flex p-0 m-0 mt-1">
-                            <h2 id="headerTitle" className="text-red mb-5">Please SignIn!</h2>
-                        </div>
-                    </Col>
-                </Container>
-            </div>}
+            </div>
+            {/* <Container id="loginform">
+                <Col lg="8" md="6" sm="9" xs="12" className='m-auto'>
+                    <div className="d-flex p-0 m-0 mt-1">
+                        <h2 id="headerTitle" className="text-red mb-5">Please SignIn!</h2>
+                    </div>
+                </Col>
+            </Container> */}
         </div>
     );
 };
