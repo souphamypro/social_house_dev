@@ -1,0 +1,38 @@
+.our-team{
+  padding-top: 80px;
+  margin-bottom: 100px;
+}
+.team-item img{
+  width: 100%;
+  height: 416px;
+  object-fit: cover;
+
+}
+.icon-list a{
+  color: #000000;
+  font-size: 40px;
+  padding: 0 10px;
+  width: auto;
+}
+
+.membership-work .team-item img {
+  width: 34%;
+  height: unset;
+  margin-left: 33%;
+  // object-fit: none;
+}
+
+.membership-work .team-item .card-name {
+  padding: 0 0 20px 0;
+}
+
+.membership-work .team-item .card-desc {
+  font-size: 17px;
+  padding: 0 20px;
+}
+
+@media screen and (max-width: 767px) {
+  .access-key-item ul li{
+    font-size: 18px;
+  }
+}

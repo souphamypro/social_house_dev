@@ -1,0 +1,27 @@
+.venus-list-page{
+    margin-top: 50px;
+    padding-top: 50px;
+    border-top: 2px solid #000000;
+}
+.venues-item-img{
+    width: 100%;
+    height: 250px;
+}
+.venues-item{
+    text-decoration: none;
+}
+.social-link{
+    color: #000000;
+    font-size: 40px;
+    padding: 0 10px;
+
+    svg {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .venues-item-img{
+        height: 150px;
+    }
+}

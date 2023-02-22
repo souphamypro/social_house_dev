@@ -1,0 +1,63 @@
+.home-page{    
+    // margin-top: 82px;
+    padding-top: 100px;
+}
+.logo{
+    width: 200px;
+}
+.link:hover{
+    color: white;
+}
+.logo-text{
+    font-size: 45px;
+    color: rgb(0, 0, 0);
+    font-weight: 400;
+    font-style: normal;
+    font-family: "TimesNewRoman";
+    text-decoration: none;
+}
+.home-main-back{
+    background: url("../../assets/images/back.jpg");
+    background-size: cover;
+    min-height: 300px;
+}
+.home-description{
+    padding-top: 50px;
+    margin-bottom: 150px;
+}
+
+//
+.horizon-part{
+    margin-top: 50px;
+    display: block;
+}
+
+.m-custom-align{
+    text-align: center;
+}
+
+.membership-work {
+    margin-bottom: 40px;
+}
+
+@media screen and (max-width: 767px){
+    .logo-text{
+        font-size: 32px;
+    }
+    .home-description{
+        padding-top: 30px;
+        margin-bottom: 30px;
+    }
+    .horizon-part{
+        margin-top: 50px;
+    }
+    .m-custom-align{
+        text-align: left;
+    }
+}
+
+@media screen and (min-width: 1024px){
+    .m-padding-0-100 {
+        padding: 0 100px;
+    }
+}

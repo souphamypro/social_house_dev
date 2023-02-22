@@ -1,0 +1,40 @@
+.modalBackground {
+  width: 100vw;
+  height: 100vh;
+  //background-color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.checkout-modalContainer {
+  width: 700px;
+  height: auto;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  position: relative;
+
+  iframe {
+    border-radius: 12px;
+  }
+
+  .titleCloseBtn {
+    position: absolute;
+    top: 5px;
+    right: 25px;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  
+}
+

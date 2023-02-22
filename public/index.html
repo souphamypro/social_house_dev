@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="The Social House is the first decentralized membership program that grants members access to the best venues and events nationwide."
+    />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1-rc.2/web3.min.js"></script>
+
+    <script language="javascript" type="text/javascript" src="https://smtpjs.com/v3/smtp.js"></script>
+    <script id="creatify_script" src="https://sandbox.nftpay.xyz/libs/iframe_inject.js?contract_uuid=92ab0feb-ec12-42c8-8e9f-d863691cb2e6"></script>
+
+    <title>Social House</title>
+    <style>
+      .float-message {
+        position:fixed;
+        z-index:1001;
+        max-width:400px;
+        bottom:15px;
+        right:15px;
+        color:#444;
+        font-size:16px;
+      }
+      .float-message-inner {
+        position:relative;
+        background:#FFF;
+        padding:20px;
+        right: 60px;
+        bottom: -5px;
+        box-shadow:0px 5px 10px rgba(0,0,0,0.5);
+        border-radius:5px;
+        text-transform: uppercase;
+      }
+      .float-message-inner p {
+        margin-bottom: 0;
+      }
+      .close-link {
+        text-decoration:none;
+        color: blue;
+        font-weight:bold;
+        position:absolute;
+        bottom:0px;
+        right:0;
+        height: 50px;
+        cursor: pointer;
+      }
+      .mobile-display{display:none}
+      .desktop-display{display:block}
+      @media (max-width:800px){
+        .desktop-display {display:none}
+        .mobile-display {display:block}
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-57LJNEY0H6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-57LJNEY0H6');
+    </script>
+
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <div class='float-message'>
+      <img onclick="toggleMessage()" class="close-link" src="android-chrome-512x512.png"/>
+      <div class='float-message-inner' id="float-message-inner">
+        <p class="desktop-display">We are currently waiving membership dues</p>
+        <p class="mobile-display">Dues currently waived</p>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    function sendEmail(Subject, Body, To) {
+      Email.send({
+        Host : "smtp.elasticemail.com",
+        Username : "support@thesocialhouse.io",
+        Password : "D347C8D77CAE32466683977E6B92ED89FE2A",
+        Port: 2525,
+        To : To,
+        From : "dan@thesocialhouse.io",
+        Subject : Subject,
+        Body : Body
+      }).then(
+        message => {
+          if(message === 'OK')
+          {
+            alert("Thank you for joining our waitlist. A team member will be in touch when memberships become available.")
+          }
+          else{
+            alert(message)
+          }
+        }
+      );
+    }
+    function toggleMessage() {
+      var x = document.getElementById("float-message-inner");
+      if (x.style.display == "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+</html>
