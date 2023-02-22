@@ -2,6 +2,10 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "engines" : { 
+    "npm" : ">=9.3.1",
+    "node" : ">=18.14.0"
+  },
   "dependencies": {
     "@elasticemail/elasticemail-client-ts-axios": "^4.0.18",
     "@fortawesome/react-fontawesome": "^0.1.18",
