@@ -62,10 +62,8 @@ const JoinNowModal: FC<IProps> = ({ setOpenModal, waitlistEvent }) => {
                         <div className='w-auto d-flex px-0'>
                             <p className='m-auto'>Join our waitlist to be notified when each wave opens</p>
                         </div>
-
                         <button className="btn-black-back w-auto" onClick={() => { waitlistEvent() }}>WAITLIST</button>
                     </div>
-
                 </div>
             </div> : <div className="modalContainer">
                 <button className="titleCloseBtn"

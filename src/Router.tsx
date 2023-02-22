@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Routes, Route, HashRouter, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, HashRouter, Outlet } from 'react-router-dom';
 import Root from './views/Root';
 import AccessKeys from './views/AccessKeys';
 import OurTeam from "./views/OurTeam";

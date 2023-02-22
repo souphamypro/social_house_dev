@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { ReactComponent as Logo } from '../../assets/images/logo_home.svg';
 import { HashLink as Link } from 'react-router-hash-link';
 import HorizonImg from '../../assets/images/s(6).jpg';
