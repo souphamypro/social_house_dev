@@ -56,7 +56,7 @@ const MemberShip: FC = () => {
     const onLoginSuccess = async (code: string) => {
         console.log("MemberShip onLoginSuccess code = : ", code);
         // setIsLoading(true);
-        if ( code !== undefined ) {
+        if (code !== undefined) {
             let response = await axios.post(process.env.REACT_APP_BACKURL + "api/exchange-user-token", { code: code }, {
                 headers: {
                     Session: session
@@ -211,49 +211,53 @@ const MemberShip: FC = () => {
                 <div className="col-12 platinum-key mb-3 mt-5 h-100 access-key-item">
                     <div className={'row py-5 access-key-item h-100'}>
                         <div className="mx-0 my-5 m-auto btn-membership">
-                            <Row className='m-0 w-100'>
-                                <Col lg="4" md="5" sm="12" xs="12" className='mb-3'>
-                                    {
-                                        (walletAddress === "" || walletAddress === null) ? <Button
-                                            className="btn btn-lg button-border-color w-100 m-auto"
-                                            variant="success"
-                                            onClick={() => { connectWallet() }}>Connect Wallet
-                                        </Button> : <Button
-                                            className="btn btn-lg button-border-color w-100 m-auto"
-                                            variant="danger"
-                                            onClick={() => { disconnectWallet() }}>Disconnect Wallet
-                                        </Button>
-                                    }
-                                </Col>
-                                <Col lg="6" md="7" sm="12" xs="12" className='mb-3'>
-                                    {
-                                        (walletAddress !== "" && walletAddress !== null) && <div onClick={() => { save_clipboard(walletAddress) }}>
-                                            <input type="text" className="input-style w-100 m-auto" value={walletAddress} disabled={true} />
-                                        </div>
-                                    }
-                                </Col>
-                            </Row>
-                            <Row className='m-0 mt-4'>
-                                <Col lg="4" md="5" sm="12" xs="12" className='mb-3'>
-                                    {
-                                        (walletAddressPaper === "" || walletAddressPaper === null) ?
-                                            <PaperSDKProvider clientId={process.env.REACT_APP_PAPTER_CLIENT_ID} chainName="Goerli">
-                                                <LoginWithPaper className="btn btn-success btn-lg text-white w-100" onSuccess={(code) => onLoginSuccess(code)} />
-                                            </PaperSDKProvider> : <Button
+                            {
+                                (walletAddressPaper === "" || walletAddressPaper === null) && <Row className='m-0 w-100'>
+                                    <Col lg="4" md="5" sm="12" xs="12" className='mb-3'>
+                                        {
+                                            (walletAddress === "" || walletAddress === null) ? <Button
+                                                className="btn btn-lg button-border-color w-100 m-auto"
+                                                variant="success"
+                                                onClick={() => { connectWallet() }}>Connect Wallet
+                                            </Button> : <Button
                                                 className="btn btn-lg button-border-color w-100 m-auto"
                                                 variant="danger"
-                                                onClick={() => { onLogOut() }}>LogOut Paper
+                                                onClick={() => { disconnectWallet() }}>Disconnect Wallet
                                             </Button>
-                                    }
-                                </Col>
-                                <Col lg="6" md="7" sm="12" xs="12" className='mb-3'>
-                                    {
-                                        (walletAddressPaper !== "" && walletAddressPaper !== null) && <div onClick={() => { save_clipboard(walletAddressPaper) }}>
-                                            <input type="text" className="input-style w-100 m-auto" value={walletAddressPaper} disabled={true} />
-                                        </div>
-                                    }
-                                </Col>
-                            </Row>
+                                        }
+                                    </Col>
+                                    <Col lg="6" md="7" sm="12" xs="12" className='mb-3'>
+                                        {
+                                            (walletAddress !== "" && walletAddress !== null) && <div onClick={() => { save_clipboard(walletAddress) }}>
+                                                <input type="text" className="input-style w-100 m-auto" value={walletAddress} disabled={true} />
+                                            </div>
+                                        }
+                                    </Col>
+                                </Row>
+                            }
+                            {
+                                (walletAddress === "" || walletAddress === null) && <Row className='m-0 mt-4'>
+                                    <Col lg="4" md="5" sm="12" xs="12" className='mb-3'>
+                                        {
+                                            (walletAddressPaper === "" || walletAddressPaper === null) ?
+                                                <PaperSDKProvider clientId={process.env.REACT_APP_PAPTER_CLIENT_ID} chainName="Goerli">
+                                                    <LoginWithPaper className="btn btn-success btn-lg text-white w-100" onSuccess={(code) => onLoginSuccess(code)} />
+                                                </PaperSDKProvider> : <Button
+                                                    className="btn btn-lg button-border-color w-100 m-auto"
+                                                    variant="danger"
+                                                    onClick={() => { onLogOut() }}>LogOut Paper
+                                                </Button>
+                                        }
+                                    </Col>
+                                    <Col lg="6" md="7" sm="12" xs="12" className='mb-3'>
+                                        {
+                                            (walletAddressPaper !== "" && walletAddressPaper !== null) && <div onClick={() => { save_clipboard(walletAddressPaper) }}>
+                                                <input type="text" className="input-style w-100 m-auto" value={walletAddressPaper} disabled={true} />
+                                            </div>
+                                        }
+                                    </Col>
+                                </Row>
+                            }
                         </div>
                         <Col lg="4" md="3" sm="2" xs="2"></Col>
                     </div>
