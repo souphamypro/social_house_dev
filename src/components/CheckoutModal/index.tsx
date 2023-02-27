@@ -1,7 +1,7 @@
 import { FC } from 'react'
-import { useSelector } from "react-redux";
-import { InitialState } from "../../reducers/modules/user-reducer";
-import { Col, Container } from "react-bootstrap";
+// import { useSelector } from "react-redux";
+// import { InitialState } from "../../reducers/modules/user-reducer";
+// import { Col, Container } from "react-bootstrap";
 import { CHECKOUT_SHAREABLE_LINK } from '../../utils/paper.mjs';
 // import "@paperxyz/react-client-sdk/dist/index.css";
 import './style.scss'
@@ -10,16 +10,16 @@ interface IProps {
     setCheckoutModalOpen: any;
 }
 
-interface StateProps {
-    isAuthenticated: boolean;
-}
+// interface StateProps {
+//     isAuthenticated: boolean;
+// }
 const CheckoutModal: FC<IProps> = ({ setCheckoutModalOpen }) => {
 
-    const { isAuthenticated } = useSelector<InitialState, StateProps>((state: InitialState) => {
-        return {
-            isAuthenticated: state.isAuthenticated
-        }
-    });
+    // const { isAuthenticated } = useSelector<InitialState, StateProps>((state: InitialState) => {
+    //     return {
+    //         isAuthenticated: state.isAuthenticated
+    //     }
+    // });
 
     return (
         <>

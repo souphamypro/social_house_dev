@@ -4,7 +4,7 @@ import './style.scss'
 // import WaitListModal from "../../components/WaitListModal";
 import CheckoutModal from '../../components/CheckoutModal';
 import AuthModal from '../../components/AuthModal';
-import KeyCard from "./KeyCard";
+import KeyCard from "../../components/KeyCard";
 import NavBar from '../../components/NavBar';
 import card_1 from "../../assets/images/s.png";
 import card_2 from "../../assets/images/s(1).png";

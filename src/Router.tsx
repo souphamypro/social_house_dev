@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Routes, Route, HashRouter, Outlet } from 'react-router-dom';
+import { Routes, Route, HashRouter, Outlet, Navigate } from 'react-router-dom';
 import Root from './views/Root';
 import AccessKeys from './views/AccessKeys';
 import OurTeam from "./views/OurTeam";
@@ -9,10 +9,10 @@ import { InitialState } from "./reducers/modules/user-reducer";
 
 
 const PrivateRoute = (isAuth: any) => {
-    console.log("isAuth, ", isAuth);
+    // console.log("isAuth, ", isAuth);
     return (
         // isAuth ? <Outlet /> : <Navigate to="/" />
-        isAuth ? <Outlet /> : <Root />
+        isAuth.isAuthenticated ? <Outlet /> : <Navigate to="/" />
     );
 }
 interface Props {
@@ -34,10 +34,11 @@ const Router: FC<Props> = () => {
         <HashRouter>
             <Routes>
                 <Route path="/" element={<Root />} />
+                <Route path="/home" element={<AuthRoutes />} />
+                <Route path="/access-keys" element={<AccessKeys />} />
+                <Route path="/our-team" element={<OurTeam />} />
                 <Route path="/" element={<PrivateRoute isAuthenticated={isAuthenticated} />} >
-                    <Route path="/home" element={<AuthRoutes />} />
-                    <Route path="/access-keys" element={<AccessKeys />} />
-                    <Route path="/our-team" element={<OurTeam />} />
+                    <Route path="/app/*" element={<AuthRoutes />} />
                 </Route>
             </Routes>
         </HashRouter>

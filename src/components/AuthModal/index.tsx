@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { Row, Col, Container } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 
@@ -13,6 +14,7 @@ interface IProps {
 
 const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const authDispatcher = new AuthDispatcher(dispatch);
 
@@ -70,8 +72,9 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
                 if (response.data.status) {
                     sessionStorage.setItem("token", response.data.data);
                     sessionStorage.setItem("email", response.data.email);
-                    authDispatcher.loginSuccess(true);
+                    authDispatcher.loginSuccess(response.data.data);
                     setSignInModalOpen(false);
+                    navigate("/app/memberShip");
                 } else {
                     setErrorMag(response.data.data);
                 }
@@ -129,7 +132,7 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
 
     const handleUpdatePassword = async (e: any) => {
         e.preventDefault();
-        let response = await axios.post(process.env.REACT_APP_BACKURL + "user/forget-password", {email: useremail});
+        let response = await axios.post(process.env.REACT_APP_BACKURL + "user/forget-password", { email: useremail });
         try {
             if (response.data.status) {
                 setErrorMag("Sent password rest link to email!");

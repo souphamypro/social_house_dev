@@ -33,6 +33,6 @@
 
 @media screen and (max-width: 767px) {
   .access-key-item ul li{
-    font-size: 18px;
+    font-size: calc(10px + 1vmin)
   }
 }

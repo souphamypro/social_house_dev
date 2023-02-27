@@ -42,6 +42,9 @@ const NavBar: FC<IJoinNow> = ({ setCheckoutModalOpen, setSignInModalOpen }) => {
                         <li><Link to="/#home-page" className="link">About</Link></li>
                         <li><Link to="/access-keys/#access-keys" className="link">Access Keys</Link></li>
                         <li><Link to="/our-team/#our-team" className="link">Our Team</Link></li>
+                        {
+                            isAuthenticated && <li><Link to="/app/memberShip" className="link">MemberShip</Link></li>
+                        }
                         {/*<li className='d-flex d-md-none'><Link onClick={onClickBuyNow} className="link" to='#'>BUY NOW</Link></li>*/}
                         <li className='d-flex d-md-none'><a href="https://apps.apple.com/us/app/apollo-id/id1552644962" className="link">Member Portal</a></li>
                         <li className='d-flex d-md-none'><Link onClick={() => { setCheckoutModalOpen(true) }} className="link" to='#'>JOIN NOW</Link></li>

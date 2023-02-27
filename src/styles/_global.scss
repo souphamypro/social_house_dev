@@ -1,30 +1,49 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'TimesNewRoman', sans-serif;
-    -webkit-font-smoothing: antialiased;
+    margin                 : 0;
+    padding                : 0;
+    font-family            : 'TimesNewRoman', sans-serif;
+    -webkit-font-smoothing : antialiased;
     -moz-osx-font-smoothing: grayscale;
-    min-height: 100%;
-    background-color: white;
-    overflow-x: hidden;
+    min-height             : 100%;
+    background-color       : white;
+    overflow-x             : hidden;
 }
-p, h1, h2, h3, h4, h5, label {
-    color: #000000;
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+label {
+    color      : #000000;
     font-family: 'TimesNewRoman', sans-serif;
 }
-span{
-    color: #000000;
+
+span {
+    color      : #000000;
     font-family: 'TimesNewRoman', sans-serif;
 }
-button{
+
+.btn-membership span {
+    color      : #FFFFFF;
+    font-size  : calc(0.8rem + 0.5vmin);
+    font-family: 'TimesNewRoman', sans-serif;
+}
+
+button {
     font-family: 'OpenSans';
 }
+
 #root {
     min-height: 100%;
 }
-input, textarea{
+
+input,
+textarea {
     font-family: 'OpenSans';
 }
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -32,22 +51,21 @@ input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
 }
 
-textarea:hover, 
-input:hover, 
-textarea:active, 
-input:active, 
-textarea:focus, 
+textarea:hover,
+input:hover,
+textarea:active,
+input:active,
+textarea:focus,
 input:focus,
 button:focus,
 button:active,
 button:hover,
 label:focus,
 .btn:active,
-.btn.active
-{
-    outline:0px !important;
-    -webkit-appearance:none;
-    box-shadow: none !important;
+.btn.active {
+    outline           : 0px !important;
+    -webkit-appearance: none;
+    box-shadow        : none !important;
     //font-family: "OpenSans";
 }
 
@@ -58,23 +76,70 @@ input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
 }
 
-.w-100{
+.input-style {
+    background-color: #FFFFFF;
+    box-sizing      : border-box;
+    border          : none;
+    border-radius   : 1.2rem;
+    font-size       : calc(0.6rem + 0.8vmin);
+    padding-left    : 0.5rem;
+    padding-bottom  : 0.4rem;
+    padding-top     : 0.6rem;
+    box-shadow      : 0 5px 10px rgba(25, 135, 84, 0.7);
+    transition      : box-shadow 0.2s ease-in;
+}
+
+.input-style:hover {
+    box-shadow: 0 5px 10px rgba(23, 189, 192, 0.7) !important;
+}
+
+.input-style:focus {
+    box-shadow: 0 5px 10px rgba(23, 189, 192, 0.7) !important;
+}
+
+.w-100 {
     width: 100% !important;
 }
-.pb-150px{
+
+.pb-150px {
     padding-bottom: 150px;
 }
 
 
 @media screen and (max-width: 767px) {
-    .m-pb-50px{
+    .m-pb-50px {
         padding-bottom: 30px;
     }
-    .m-w-100{
+
+    .m-w-100 {
         width: 100% !important;
     }
-    .m-py-2{
-        padding-top: 10px!important;
-        padding-bottom: 10px!important;
+
+    .m-py-2 {
+        padding-top   : 10px !important;
+        padding-bottom: 10px !important;
     }
+}
+
+// Additional 
+.loading {
+    position           : fixed;
+    top                : 0%;
+    left               : 0%;
+    /* transform       : translate(-50%, -50%); */
+    background-color   : #0000008c;
+    z-index            : 1049;
+}
+
+.loading-progress-area {
+    margin-top : calc(25% - 80px) !important;
+    margin-left: calc(50% - 50px) !important;
+}
+
+.text-color {
+    color: rgb(209, 209, 209) !important;
+}
+
+.text-color:hover {
+    color: rgba(209, 209, 209, 0.8) !important;
 }

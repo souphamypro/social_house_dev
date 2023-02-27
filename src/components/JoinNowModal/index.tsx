@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { useSelector } from "react-redux";
-import { InitialState } from "../../reducers/modules/user-reducer";
-import { Col, Container } from "react-bootstrap";
+// import { useSelector } from "react-redux";
+// import { InitialState } from "../../reducers/modules/user-reducer";
+// import { Col, Container } from "react-bootstrap";
 import './style.scss';
 import Logo from "../../assets/images/logo.svg";
 
@@ -9,16 +9,16 @@ interface IProps {
     setOpenModal: any;
     waitlistEvent: any;
 }
-interface StateProps {
-    isAuthenticated: boolean;
-}
+// interface StateProps {
+//     isAuthenticated: boolean;
+// }
 const JoinNowModal: FC<IProps> = ({ setOpenModal, waitlistEvent }) => {
 
-    const { isAuthenticated } = useSelector<InitialState, StateProps>((state: InitialState) => {
-        return {
-            isAuthenticated: state.isAuthenticated
-        }
-    });
+    // const { isAuthenticated } = useSelector<InitialState, StateProps>((state: InitialState) => {
+    //     return {
+    //         isAuthenticated: state.isAuthenticated
+    //     }
+    // });
 
     return (
         <div className="modalBackground">

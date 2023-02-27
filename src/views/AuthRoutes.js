@@ -1,18 +1,15 @@
 import React, {Suspense} from "react";
-import {Routes} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 
-// import Home from "./project/Home";
-// import EditAsset from "./asset/EditAsset";
-// import MintAsset from "./asset/MintAsset";
-// import Account from "./account/Account.js";
+import MemberShip from "./MemberShip";
 
 export default function AppRoutes() {
     return (
         // <AppLayout>
-        <div className="dashboard-wrapper">
+        <div className="dashboard-wrapper h-100">
             <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
-                    {/* <Route path="" element={<Home />} /> */}
+                    <Route path="memberShip" element={<MemberShip />} />
                     {/* <Route path="project" element={<Home />} />
                         <Route path="account" element={<Account />} />
                         <Route path="create-project" element={<CreateProject />} />
