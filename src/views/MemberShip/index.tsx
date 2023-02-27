@@ -56,19 +56,23 @@ const MemberShip: FC = () => {
     const onLoginSuccess = async (code: string) => {
         console.log("MemberShip onLoginSuccess code = : ", code);
         // setIsLoading(true);
-        let response = await axios.post(process.env.REACT_APP_BACKURL + "api/exchange-user-token", { code: code }, {
-            headers: {
-                Session: session
+        if ( code !== undefined ) {
+            let response = await axios.post(process.env.REACT_APP_BACKURL + "api/exchange-user-token", { code: code }, {
+                headers: {
+                    Session: session
+                }
+            });
+            console.log("MemberShip papaer onLoginSuccess response = : ", response);
+            setIsLoading(false);
+            if (response.status === 200) {
+                authDispatcher.loginSuccessPaper(response.data.email, response.data.walletAddress);
+                toast.success("Saved to login Paper!", { autoClose: 1500 });
+            } else {
+                toast.error(response.data, { autoClose: 1500 });
+                authDispatcher.logOut();
             }
-        });
-        console.log("MemberShip papaer onLoginSuccess response = : ", response);
-        setIsLoading(false);
-        if (response.status === 200) {
-            authDispatcher.loginSuccessPaper(response.data.email, response.data.walletAddress);
-            toast.success("Saved to login Paper!", { autoClose: 1500 });
         } else {
-            toast.error(response.data, { autoClose: 1500 });
-            authDispatcher.logOut();
+            toast.error("Invalid Login Code", { autoClose: 1500 });
         }
     }
 
