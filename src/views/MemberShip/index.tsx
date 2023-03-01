@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Button, Col, Row } from "react-bootstrap";
-import { CircularProgress } from "@material-ui/core";
+import { Col, Row } from "react-bootstrap";
+import { CircularProgress, Button } from "@material-ui/core";
 import { PaperSDKProvider, LoginWithPaper } from '@paperxyz/react-client-sdk'
 import copy from "copy-to-clipboard";
 import axios from "axios";
@@ -21,7 +21,7 @@ import NavBar from '../../components/NavBar';
 import contractABI from "../../utils/abi.json";
 
 const web3Modal = new Web3Modal({
-    cacheProvider: true, // optional
+    cacheProvider: true,
     providerOptions: providerOptions // required
 });
 
@@ -95,7 +95,7 @@ const MemberShip: FC = () => {
                 const network = await library.getNetwork();
                 // console.log("Settings connect accounts : ", accounts, network, props.chainId);
                 let netowrkInfo = goerli_info;
-                if (process.env.REACT_APP_NETWORK === "Ethereum") {
+                if (process.env.REACT_APP_NETWORK === "homestead") {
                     netowrkInfo = mainnet_info;
                 }
                 if (network.chainId.toString() !== netowrkInfo.chainId) {
@@ -128,6 +128,7 @@ const MemberShip: FC = () => {
                         provider = await web3Modal.connect();
                         library = new ethers.providers.Web3Provider(provider);
                         accounts = await library.listAccounts();
+                        // console.log(accounts);
                         setIsLoading(false);
                         if (accounts) {
                             // setAccount(accounts[0]);
@@ -139,6 +140,7 @@ const MemberShip: FC = () => {
                     }
                 } else {
                     setIsLoading(false);
+                    // console.log(accounts);
                     if (accounts) {
                         // setAccount(accounts[0]);
                         authDispatcher.connectWallet(accounts[0]);
@@ -158,29 +160,31 @@ const MemberShip: FC = () => {
     const disconnectWallet = async () => {
         // setAccount("");
         authDispatcher.disconnectWallet();
+        web3Modal.clearCachedProvider();
         toast.warning("Disconnect Wallet!", { autoClose: 1500 });
     }
 
     const checkNFTExist = async (address: string) => {
         let netowrkInfo = goerli_info;
-        if (process.env.REACT_APP_NETWORK === "Ethereum") {
+        if (process.env.REACT_APP_NETWORK === "homestead") {
             netowrkInfo = mainnet_info;
         }
         try {
-            // const provider = new ethers.providers.JsonRpcProvider(netowrkInfo.rpcURL);
-            var provider = await web3Modal.connect();
-            var library = new ethers.providers.Web3Provider(provider);
-            // let abi = process.env.REACT_APP_CONTRACT_ABI === undefined ? "" : process.env.REACT_APP_CONTRACT_ABI;
-            const contract = new ethers.Contract(netowrkInfo.nftContractAddress, contractABI, library);
-            contract.connect(library);
-            let accounts = [];
+            let accounts = []; let balances = [];
             for (let i = 0; i < tokenIDs.length; i++) {
                 accounts.push(address);
             }
-            let balances = await contract.balanceOfBatch(accounts, tokenIDs);
+            const library = new ethers.providers.InfuraProvider(netowrkInfo.infuraNetwork, [process.env.REACT_APP_INFURAKEY]);
+            const contract = new ethers.Contract(netowrkInfo.nftContractAddress, contractABI, library);
+            contract.connect(library);
+            balances = await contract.balanceOfBatch(accounts, tokenIDs);
             for (let i = 0; i < balances.length; i++) {
                 console.log("Membership checkNFTExist balances = : ", balances[i].toString());
+                if (parseInt(balances[i].toString()) > 0) {
+                    setIsExist(true);
+                }
             }
+            // }
         } catch (error) {
             console.log("Membership checkNFTExist error = : ", error);
 
@@ -215,7 +219,7 @@ const MemberShip: FC = () => {
                 await checkNFTExist(walletAddressPaper);
             }
         }
-        console.log("MemberShip UseEffect isAuthenticated = : ", isAuthenticated);
+        // console.log("MemberShip UseEffect isAuthenticated = : ", isAuthenticated);
         if (!isAuthenticated) {
             navigate("/");
         } else {
@@ -253,73 +257,64 @@ const MemberShip: FC = () => {
                     <div className={'row py-5 access-key-item h-100'}>
                         <div className="mx-0 my-5 m-auto btn-membership">
                             {
-                                (walletAddressPaper === "" || walletAddressPaper === null) && <><Row className='m-0 w-100'>
-                                    <Col lg="4" md="5" sm="12" xs="12" className='mb-3'>
+                                (walletAddressPaper === "" || walletAddressPaper === null) && <Row className='m-0 mb-3 w-100'>
+                                    <Col lg="4" md="6" sm="12" xs="12" className='mx-auto'>
                                         {
                                             (walletAddress === "" || walletAddress === null) ? <Button
-                                                className="btn btn-lg button-border-color w-100 m-auto"
-                                                variant="success"
-                                                onClick={() => { connectWallet() }}>Connect Wallet
+                                                className="btn btn-lg btn-bg-success w-100 m-auto" variant="contained"
+                                                onClick={() => {  }}>Connect Wallet
                                             </Button> : <Button
-                                                className="btn btn-lg button-border-color w-100 m-auto"
-                                                variant="danger"
+                                                className="btn btn-lg btn-bg-danger w-100 m-auto" variant="contained"
                                                 onClick={() => { disconnectWallet() }}>Disconnect Wallet
                                             </Button>
                                         }
                                     </Col>
-                                    <Col lg="6" md="7" sm="12" xs="12" className='mb-3'>
+                                </Row>
+                            }
+                            {
+                                (walletAddress !== "" && walletAddress !== null) && <Row className='m-0 w-100'>
+                                    <Col lg="5" md="7" sm="12" xs="12" className='mx-auto mb-3'>
+                                        <div className="height-center" onClick={() => { save_clipboard(walletAddress) }}>
+                                            <input type="text" className="input-style w-100 m-auto text-center" value={walletAddress} disabled={true} />
+                                        </div>
+                                    </Col>
+                                    <Col lg="12" md="12" sm="12" xs="12" className='mb-3 text-center'>
                                         {
-                                            (walletAddress !== "" && walletAddress !== null) && <div className="height-center" onClick={() => { save_clipboard(walletAddress) }}>
-                                                <input type="text" className="input-style w-100 m-auto" value={walletAddress} disabled={true} />
-                                            </div>
+                                            isExist !== null && isExist ? <a href={linkedURL}>{linkedURL}</a> :
+                                                <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected</button>
                                         }
                                     </Col>
                                 </Row>
-                                    <Row className="m-0 w-100 text-center">
-                                        {
-                                            (walletAddress !== "" && walletAddress !== null) && <Col lg="12" md="12" sm="12" xs="12" className='mb-3'>
-                                                {
-                                                    isExist ? <a href={linkedURL}>{linkedURL}</a> :
-                                                        <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected</button>
-                                                }
-                                            </Col>
-                                        }
-                                    </Row>
-                                </>
                             }
                             {
-                                (walletAddress === "" || walletAddress === null) && <><Row className='m-0 mt-4'>
-                                    <Col lg="4" md="5" sm="12" xs="12" className='mb-3'>
+                                (walletAddress === "" || walletAddress === null) && <Row className='m-0 mb-3 mt-4'>
+                                    <Col lg="4" md="6" sm="12" xs="12" className='m-auto'>
                                         {
                                             (walletAddressPaper === "" || walletAddressPaper === null) ?
                                                 <PaperSDKProvider clientId={process.env.REACT_APP_PAPTER_CLIENT_ID} chainName="Goerli">
-                                                    <LoginWithPaper className="btn btn-success btn-lg text-white w-100" onSuccess={(code) => onLoginSuccess(code)} />
-                                                </PaperSDKProvider> : <Button
-                                                    className="btn btn-lg button-border-color w-100 m-auto"
-                                                    variant="danger"
+                                                    <LoginWithPaper className="btn btn-bg-success btn-md text-white w-100" onSuccess={(code) => onLoginSuccess(code)} />
+                                                </PaperSDKProvider> : <Button variant="contained"
+                                                    className="btn btn-lg btn-bg-danger w-100 m-auto"
                                                     onClick={() => { onLogOut() }}>LogOut Paper
                                                 </Button>
                                         }
                                     </Col>
-                                    <Col lg="6" md="7" sm="12" xs="12" className='mb-3'>
+                                </Row>
+                            }
+                            {
+                                (walletAddressPaper !== "" && walletAddressPaper !== null) && <Row className='m-0 w-100'>
+                                    <Col lg="5" md="7" sm="12" xs="12" className='mx-auto mb-3'>
+                                        <div className="height-center" onClick={() => { save_clipboard(walletAddressPaper) }}>
+                                            <input type="text" className="input-style w-100 m-auto text-center" value={walletAddressPaper} disabled={true} />
+                                        </div>
+                                    </Col>
+                                    <Col lg="12" md="12" sm="12" xs="12" className='mb-1 text-center'>
                                         {
-                                            (walletAddressPaper !== "" && walletAddressPaper !== null) && <div className="height-center" onClick={() => { save_clipboard(walletAddressPaper) }}>
-                                                <input type="text" className="input-style w-100 m-auto" value={walletAddressPaper} disabled={true} />
-                                            </div>
+                                            isExist ? <a href={linkedURL}>{linkedURL}</a> :
+                                                <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected</button>
                                         }
                                     </Col>
                                 </Row>
-                                    <Row className="m-0 w-100 text-center">
-                                        {
-                                            (walletAddressPaper !== "" && walletAddressPaper !== null) && <Col lg="12" md="12" sm="12" xs="12" className='mb-3'>
-                                                {
-                                                    isExist ? <a href={linkedURL}>{linkedURL}</a> : <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected
-                                                    </button>
-                                                }
-                                            </Col>
-                                        }
-                                    </Row>
-                                </>
                             }
                         </div>
                     </div>
