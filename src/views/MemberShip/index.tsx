@@ -262,7 +262,7 @@ const MemberShip: FC = () => {
                                         {
                                             (walletAddress === "" || walletAddress === null) ? <Button
                                                 className="btn btn-lg btn-bg-success w-100 m-auto" variant="contained"
-                                                onClick={() => {  }}>Connect Wallet
+                                                onClick={() => { connectWallet() }}>Connect Wallet
                                             </Button> : <Button
                                                 className="btn btn-lg btn-bg-danger w-100 m-auto" variant="contained"
                                                 onClick={() => { disconnectWallet() }}>Disconnect Wallet
@@ -280,7 +280,7 @@ const MemberShip: FC = () => {
                                     </Col>
                                     <Col lg="12" md="12" sm="12" xs="12" className='mb-3 text-center'>
                                         {
-                                            isExist !== null && isExist ? <a href={linkedURL}>{linkedURL}</a> :
+                                            !isExist ? <a href={linkedURL}>{linkedURL}</a> :
                                                 <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected</button>
                                         }
                                     </Col>

@@ -45,13 +45,10 @@
 }
 
 // Click Button Effect
-button {
+.btn-membership button {
   cursor          : pointer;
-  margin          : 10px;
   position        : relative;
   overflow        : hidden;
-  padding         : 15px 30px;
-  font-size       : 40px;
   background-color: transparent;
   border          : none;
   outline         : none;
@@ -80,7 +77,7 @@ button {
   }
 }
 
-span.ripple {
+.btn-membership span.ripple {
   background-color: rgb(225, 248, 255);
   border-radius   : 50%;
   position        : absolute;
