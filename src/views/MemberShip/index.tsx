@@ -208,10 +208,10 @@ const MemberShip: FC = () => {
             return data;
         }
         const updateExist = async () => {
-            if ( walletAddress !== "" && walletAddress !== null) {
+            if (walletAddress !== "" && walletAddress !== null) {
                 await checkNFTExist(walletAddress);
             }
-            if ( walletAddressPaper !== "" && walletAddressPaper !== null) {
+            if (walletAddressPaper !== "" && walletAddressPaper !== null) {
                 await checkNFTExist(walletAddressPaper);
             }
         }
@@ -288,7 +288,7 @@ const MemberShip: FC = () => {
                                 </>
                             }
                             {
-                                (walletAddress === "" || walletAddress === null) && <Row className='m-0 mt-4'>
+                                (walletAddress === "" || walletAddress === null) && <><Row className='m-0 mt-4'>
                                     <Col lg="4" md="5" sm="12" xs="12" className='mb-3'>
                                         {
                                             (walletAddressPaper === "" || walletAddressPaper === null) ?
@@ -308,15 +308,18 @@ const MemberShip: FC = () => {
                                             </div>
                                         }
                                     </Col>
-                                    {
-                                        (walletAddressPaper !== "" && walletAddressPaper !== null) && <Col lg="12" md="12" sm="12" xs="12" className='mb-3'>
-                                            {
-                                                isExist ? <a href={linkedURL}>{linkedURL}</a> : <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected
-                                                </button>
-                                            }
-                                        </Col>
-                                    }
                                 </Row>
+                                    <Row className="m-0 w-100 text-center">
+                                        {
+                                            (walletAddressPaper !== "" && walletAddressPaper !== null) && <Col lg="12" md="12" sm="12" xs="12" className='mb-3'>
+                                                {
+                                                    isExist ? <a href={linkedURL}>{linkedURL}</a> : <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected
+                                                    </button>
+                                                }
+                                            </Col>
+                                        }
+                                    </Row>
+                                </>
                             }
                         </div>
                     </div>
