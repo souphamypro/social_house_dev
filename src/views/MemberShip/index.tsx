@@ -14,10 +14,11 @@ import "react-toastify/dist/ReactToastify.css";
 // import WaitListModal from "../../components/WaitListModal";
 import { useSelector, useDispatch } from "react-redux";
 import { InitialState, AuthDispatcher } from "../../reducers/modules/user-reducer";
-import { goerli_info } from '../../utils/networks';
+import { goerli_info, mainnet_info, tokenIDs, linkedURL } from '../../utils/networks';
 import { providerOptions } from "../../utils/providerOptions";
 import CheckoutModal from '../../components/CheckoutModal';
 import NavBar from '../../components/NavBar';
+import contractABI from "../../utils/abi.json";
 
 const web3Modal = new Web3Modal({
     cacheProvider: true, // optional
@@ -50,8 +51,8 @@ const MemberShip: FC = () => {
     const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
     const [signInModalOpen, setSignInModalOpen] = useState(false);
 
+    const [isExist, setIsExist] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    // const [account, setAccount] = useState("");
 
     const onLoginSuccess = async (code: string) => {
         console.log("MemberShip onLoginSuccess code = : ", code);
@@ -93,9 +94,13 @@ const MemberShip: FC = () => {
                 var accounts = await library.listAccounts();
                 const network = await library.getNetwork();
                 // console.log("Settings connect accounts : ", accounts, network, props.chainId);
-                if (network.chainId.toString() !== goerli_info.chainId) {
+                let netowrkInfo = goerli_info;
+                if (process.env.REACT_APP_NETWORK === "Ethereum") {
+                    netowrkInfo = mainnet_info;
+                }
+                if (network.chainId.toString() !== netowrkInfo.chainId) {
                     if (window.ethereum) {
-                        let chainId = ethers.utils.hexStripZeros(ethers.utils.hexlify(parseInt(goerli_info.chainId)));
+                        let chainId = ethers.utils.hexStripZeros(ethers.utils.hexlify(parseInt(netowrkInfo.chainId)));
                         try {
                             await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainId }] });
                         } catch (error) {
@@ -104,14 +109,14 @@ const MemberShip: FC = () => {
                                     method: "wallet_addEthereumChain",
                                     params: [{
                                         chainId: chainId,
-                                        rpcUrls: [goerli_info.rpcURL],
-                                        chainName: goerli_info.chainName,
+                                        rpcUrls: [netowrkInfo.rpcURL],
+                                        chainName: netowrkInfo.chainName,
                                         nativeCurrency: {
-                                            name: goerli_info.name,
-                                            symbol: goerli_info.symbolName,
-                                            decimals: goerli_info.decimals
+                                            name: netowrkInfo.name,
+                                            symbol: netowrkInfo.symbolName,
+                                            decimals: netowrkInfo.decimals
                                         },
-                                        blockExplorerUrls: [goerli_info.explorerURL]
+                                        blockExplorerUrls: [netowrkInfo.explorerURL]
                                     }]
                                 });
                             } catch (error) {
@@ -156,7 +161,33 @@ const MemberShip: FC = () => {
         toast.warning("Disconnect Wallet!", { autoClose: 1500 });
     }
 
-    const save_clipboard = (value: string) => {
+    const checkNFTExist = async (address: string) => {
+        let netowrkInfo = goerli_info;
+        if (process.env.REACT_APP_NETWORK === "Ethereum") {
+            netowrkInfo = mainnet_info;
+        }
+        try {
+            // const provider = new ethers.providers.JsonRpcProvider(netowrkInfo.rpcURL);
+            var provider = await web3Modal.connect();
+            var library = new ethers.providers.Web3Provider(provider);
+            // let abi = process.env.REACT_APP_CONTRACT_ABI === undefined ? "" : process.env.REACT_APP_CONTRACT_ABI;
+            const contract = new ethers.Contract(netowrkInfo.nftContractAddress, contractABI, library);
+            contract.connect(library);
+            let accounts = [];
+            for (let i = 0; i < tokenIDs.length; i++) {
+                accounts.push(address);
+            }
+            let balances = await contract.balanceOfBatch(accounts, tokenIDs);
+            for (let i = 0; i < balances.length; i++) {
+                console.log("Membership checkNFTExist balances = : ", balances[i].toString());
+            }
+        } catch (error) {
+            console.log("Membership checkNFTExist error = : ", error);
+
+        }
+    }
+
+    const save_clipboard = async (value: string) => {
         // console.log(" Settings save_clipboard value : ", value);
         toast.success("Saved to Clipboard!", { autoClose: 1500 });
         copy(value);
@@ -164,18 +195,25 @@ const MemberShip: FC = () => {
 
     useEffect(() => {
         const checkSession = async () => {
-            // get the data from the api
             const data = await axios.post(process.env.REACT_APP_BACKURL + "api/check-auth", {}, {
                 headers: {
                     Session: session
                 }
             });
-            console.log("MemberShip useEffect checkSession response = : ", data);
+            // console.log("MemberShip useEffect checkSession response = : ", data);
             if (data.status !== 200) {
                 toast.error(data.data, { autoClose: 1500 });
                 authDispatcher.logOut();
             }
             return data;
+        }
+        const updateExist = async () => {
+            if ( walletAddress !== "" && walletAddress !== null) {
+                await checkNFTExist(walletAddress);
+            }
+            if ( walletAddressPaper !== "" && walletAddressPaper !== null) {
+                await checkNFTExist(walletAddressPaper);
+            }
         }
         console.log("MemberShip UseEffect isAuthenticated = : ", isAuthenticated);
         if (!isAuthenticated) {
@@ -185,6 +223,9 @@ const MemberShip: FC = () => {
                 console.log(error); authDispatcher.logOut();
             });
         }
+        updateExist().catch((error) => {
+            console.log("MemberShip UseEffect updateExist error = : ", error);
+        });
     }, [isAuthenticated, session, walletAddress, walletAddressPaper]);
 
     return (
@@ -212,7 +253,7 @@ const MemberShip: FC = () => {
                     <div className={'row py-5 access-key-item h-100'}>
                         <div className="mx-0 my-5 m-auto btn-membership">
                             {
-                                (walletAddressPaper === "" || walletAddressPaper === null) && <Row className='m-0 w-100'>
+                                (walletAddressPaper === "" || walletAddressPaper === null) && <><Row className='m-0 w-100'>
                                     <Col lg="4" md="5" sm="12" xs="12" className='mb-3'>
                                         {
                                             (walletAddress === "" || walletAddress === null) ? <Button
@@ -228,12 +269,23 @@ const MemberShip: FC = () => {
                                     </Col>
                                     <Col lg="6" md="7" sm="12" xs="12" className='mb-3'>
                                         {
-                                            (walletAddress !== "" && walletAddress !== null) && <div onClick={() => { save_clipboard(walletAddress) }}>
+                                            (walletAddress !== "" && walletAddress !== null) && <div className="height-center" onClick={() => { save_clipboard(walletAddress) }}>
                                                 <input type="text" className="input-style w-100 m-auto" value={walletAddress} disabled={true} />
                                             </div>
                                         }
                                     </Col>
                                 </Row>
+                                    <Row className="m-0 w-100 text-center">
+                                        {
+                                            (walletAddress !== "" && walletAddress !== null) && <Col lg="12" md="12" sm="12" xs="12" className='mb-3'>
+                                                {
+                                                    isExist ? <a href={linkedURL}>{linkedURL}</a> :
+                                                        <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected</button>
+                                                }
+                                            </Col>
+                                        }
+                                    </Row>
+                                </>
                             }
                             {
                                 (walletAddress === "" || walletAddress === null) && <Row className='m-0 mt-4'>
@@ -251,15 +303,22 @@ const MemberShip: FC = () => {
                                     </Col>
                                     <Col lg="6" md="7" sm="12" xs="12" className='mb-3'>
                                         {
-                                            (walletAddressPaper !== "" && walletAddressPaper !== null) && <div onClick={() => { save_clipboard(walletAddressPaper) }}>
+                                            (walletAddressPaper !== "" && walletAddressPaper !== null) && <div className="height-center" onClick={() => { save_clipboard(walletAddressPaper) }}>
                                                 <input type="text" className="input-style w-100 m-auto" value={walletAddressPaper} disabled={true} />
                                             </div>
                                         }
                                     </Col>
+                                    {
+                                        (walletAddressPaper !== "" && walletAddressPaper !== null) && <Col lg="12" md="12" sm="12" xs="12" className='mb-3'>
+                                            {
+                                                isExist ? <a href={linkedURL}>{linkedURL}</a> : <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected
+                                                </button>
+                                            }
+                                        </Col>
+                                    }
                                 </Row>
                             }
                         </div>
-                        <Col lg="4" md="3" sm="2" xs="2"></Col>
                     </div>
                 </div>
             </section>

@@ -143,3 +143,10 @@ input:-webkit-autofill:active {
 .text-color:hover {
     color: rgba(209, 209, 209, 0.8) !important;
 }
+
+.height-center {
+    height         : 100% !important;
+    display        : flex !important;
+    justify-content: center !important;
+    align-items    : center !important;
+}
