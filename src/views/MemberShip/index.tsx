@@ -280,7 +280,7 @@ const MemberShip: FC = () => {
                                     </Col>
                                     <Col lg="12" md="12" sm="12" xs="12" className='mb-3 text-center'>
                                         {
-                                            !isExist ? <a href={linkedURL}>{linkedURL}</a> :
+                                            isExist ? <a href={linkedURL}>{linkedURL}</a> :
                                                 <button className="btn btn-sm btn-outline-danger m-auto" disabled>No membership detected</button>
                                         }
                                     </Col>
