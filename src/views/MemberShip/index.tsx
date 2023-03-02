@@ -1,8 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Modal } from "react-bootstrap";
+import { GrClose } from "react-icons/gr";
 import { CircularProgress, Button } from "@material-ui/core";
-import { PaperSDKProvider, LoginWithPaper } from '@paperxyz/react-client-sdk'
+import { PaperSDKProvider, LoginWithPaper } from '@paperxyz/react-client-sdk';
 import copy from "copy-to-clipboard";
 import axios from "axios";
 import './style.scss';
@@ -15,15 +16,20 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import { InitialState, AuthDispatcher } from "../../reducers/modules/user-reducer";
 import { goerli_info, mainnet_info, tokenIDs, linkedURL } from '../../utils/networks';
-import { providerOptions } from "../../utils/providerOptions";
+// import { providerOptions } from "../../utils/providerOptions";
+import {
+    getCoinbaseWalletProvider,
+    getMetaMaskProvider,
+    getWalletConnectProvider
+} from "../../utils/providerOptions";
 import CheckoutModal from '../../components/CheckoutModal';
 import NavBar from '../../components/NavBar';
 import contractABI from "../../utils/abi.json";
 
-const web3Modal = new Web3Modal({
-    cacheProvider: true,
-    providerOptions: providerOptions // required
-});
+// const web3Modal = new Web3Modal({
+//     cacheProvider: false,
+//     providerOptions: providerOptions // required
+// });
 
 interface StateProps {
     isAuthenticated: boolean;
@@ -52,7 +58,7 @@ const MemberShip: FC = () => {
     const [signInModalOpen, setSignInModalOpen] = useState(false);
 
     const [provider, setProvider] = useState<any>();
-
+    const [isOpen, setIsOpen] = useState(true);
     const [isExist, setIsExist] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -81,77 +87,86 @@ const MemberShip: FC = () => {
 
     const onLogOut = async () => {
         authDispatcher.logOutPaper();
+        // web3Modal.clearCachedProvider();
         toast.warning("LogOut Paper!", { autoClose: 1500 });
     }
 
+    const connectWithProvider = async (currentProvider: any) => {
+        try {
+            setProvider(currentProvider);
+            // Get accounts for connected wallet
+            const accounts = await currentProvider.request({ method: "eth_requestAccounts" });
+            authDispatcher.connectWallet(accounts[0]);
+            console.log(" =========== ", accounts);
+        } catch (error) {
+            console.log(" =========== ", error);
+        }
+    };
+
     const connectWallet = async () => {
         try {
-            console.log("Membership connect accounts : ");
-            // if (typeof window.ethereum === "undefined") {
-            //     toast.error("Error - MetaMask is not installed!", { position: "bottom-right", autoClose: 1500 });
+            setIsOpen(true);
+            // console.log("Membership connect accounts : ");
+            // var provider = await web3Modal.connect();
+            // var library = new ethers.providers.Web3Provider(provider);
+            // var accounts = await library.listAccounts();
+            // const network = await library.getNetwork();
+            // // setProvider(provider);
+            // // console.log("Settings connect accounts : ", accounts, network, props.chainId);
+            // let netowrkInfo = goerli_info;
+            // if (process.env.REACT_APP_NETWORK === "homestead") {
+            //     netowrkInfo = mainnet_info;
+            // }
+            // if (network.chainId.toString() !== netowrkInfo.chainId) {
+            //     if (provider) {
+            //         let chainId = ethers.utils.hexStripZeros(ethers.utils.hexlify(parseInt(netowrkInfo.chainId)));
+            //         try {
+            //             await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainId }] });
+            //         } catch (error) {
+            //             try {
+            //                 await provider.request({
+            //                     method: "wallet_addEthereumChain",
+            //                     params: [{
+            //                         chainId: chainId,
+            //                         rpcUrls: [netowrkInfo.rpcURL],
+            //                         chainName: netowrkInfo.chainName,
+            //                         nativeCurrency: {
+            //                             name: netowrkInfo.name,
+            //                             symbol: netowrkInfo.symbolName,
+            //                             decimals: netowrkInfo.decimals
+            //                         },
+            //                         blockExplorerUrls: [netowrkInfo.explorerURL]
+            //                     }]
+            //                 });
+            //             } catch (error) {
+            //                 console.log("settings.js connect add_chain error = : ", error);
+            //                 setIsLoading(false);
+            //                 return;
+            //             }
+            //         }
+            //         provider = await web3Modal.connect();
+            //         library = new ethers.providers.Web3Provider(provider);
+            //         accounts = await library.listAccounts();
+            //         // setProvider(provider);
+            //         setIsLoading(false);
+            //         if (accounts) {
+            //             // setAccount(accounts[0]);
+            //             authDispatcher.connectWallet(accounts[0]);
+            //             toast.success("Success to Connect Wallet!", { autoClose: 1500 });
+            //         } else {
+            //             toast.error("Failed to Connect Wallet!", { autoClose: 1500 });
+            //         }
+            //     }
             // } else {
-            // setIsLoading(true);
-            var provider = await web3Modal.connect();
-            var library = new ethers.providers.Web3Provider(provider);
-            var accounts = await library.listAccounts();
-            const network = await library.getNetwork();
-            setProvider(provider);
-            // console.log("Settings connect accounts : ", accounts, network, props.chainId);
-            let netowrkInfo = goerli_info;
-            if (process.env.REACT_APP_NETWORK === "homestead") {
-                netowrkInfo = mainnet_info;
-            }
-            if (network.chainId.toString() !== netowrkInfo.chainId) {
-                if (window.ethereum) {
-                    let chainId = ethers.utils.hexStripZeros(ethers.utils.hexlify(parseInt(netowrkInfo.chainId)));
-                    try {
-                        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainId }] });
-                    } catch (error) {
-                        try {
-                            await window.ethereum.request({
-                                method: "wallet_addEthereumChain",
-                                params: [{
-                                    chainId: chainId,
-                                    rpcUrls: [netowrkInfo.rpcURL],
-                                    chainName: netowrkInfo.chainName,
-                                    nativeCurrency: {
-                                        name: netowrkInfo.name,
-                                        symbol: netowrkInfo.symbolName,
-                                        decimals: netowrkInfo.decimals
-                                    },
-                                    blockExplorerUrls: [netowrkInfo.explorerURL]
-                                }]
-                            });
-                        } catch (error) {
-                            console.log("settings.js connect add_chain error = : ", error);
-                            setIsLoading(false);
-                            return;
-                        }
-                    }
-                    provider = await web3Modal.connect();
-                    library = new ethers.providers.Web3Provider(provider);
-                    accounts = await library.listAccounts();
-                    setProvider(provider);
-                    setIsLoading(false);
-                    if (accounts) {
-                        // setAccount(accounts[0]);
-                        authDispatcher.connectWallet(accounts[0]);
-                        toast.success("Success to Connect Wallet!", { autoClose: 1500 });
-                    } else {
-                        toast.error("Failed to Connect Wallet!", { autoClose: 1500 });
-                    }
-                }
-            } else {
-                setIsLoading(false);
-                // console.log(accounts);
-                if (accounts) {
-                    // setAccount(accounts[0]);
-                    authDispatcher.connectWallet(accounts[0]);
-                    toast.success("Success to Connect Wallet!", { autoClose: 1500 });
-                } else {
-                    toast.error("Failed to Connect Wallet!", { autoClose: 1500 });
-                }
-            }
+            //     setIsLoading(false);
+            //     // console.log(accounts);
+            //     if (accounts) {
+            //         // setAccount(accounts[0]);
+            //         authDispatcher.connectWallet(accounts[0]);
+            //         toast.success("Success to Connect Wallet!", { autoClose: 1500 });
+            //     } else {
+            //         toast.error("Failed to Connect Wallet!", { autoClose: 1500 });
+            //     }
             // }
         } catch (error) {
             setIsLoading(false);
@@ -160,10 +175,11 @@ const MemberShip: FC = () => {
         }
     }
 
-    const disconnectWallet = () => {
-        // setAccount("");
+    const disconnectWallet = async () => {
+        setProvider(null);
         authDispatcher.disconnectWallet();
-        web3Modal.clearCachedProvider();
+        // web3Modal.clearCachedProvider();
+        // setProvider(null);
         toast.warning("Disconnect Wallet!", { autoClose: 1500 });
     }
 
@@ -235,35 +251,35 @@ const MemberShip: FC = () => {
         });
     }, [isAuthenticated, session, walletAddress, walletAddressPaper]);
 
-    useEffect(() => {
-        if (provider?.on) {
-            toast.success(provider.on.toString(), { autoClose: 4000 });
-            const handleAccountsChanged = (accounts: any) => {
-                console.log("MemberShip useEffect : accounts = : ", accounts);
-                toast.success(accounts.toString(), { autoClose: 4000 });
-            };
-
-            const handleDisconnect = () => {
-                console.log("MemberShip useEffect : handleDisconnect = : ");
-                disconnectWallet();
-            };
-
-            provider.on("accountsChanged", handleAccountsChanged);
-            provider.on("disconnect", handleDisconnect);
-
-            return () => {
-                if (provider.removeListener) {
-                    provider.removeListener("accountsChanged", handleAccountsChanged);
-                    provider.removeListener("disconnect", handleDisconnect);
-                }
-            };
-        }
-    }, [provider]);
-
     return (
         <>
             {/* {modalOpen && <JoinNowModal setOpenModal={setModalOpen} waitlistEvent = {onClickWaitList}/>}
             {waitlistShow && <WaitListModal setOpenModal={setWaitListShow}/>} */}
+            <div className={isOpen ? "w-100 h-100 loading" : ""}>
+                {
+                    <Modal
+                        show={isOpen}
+                        className="m-auto mt-20"
+                        // onHide={() => setIsLoading(false)}
+                        dialogClassName="modal-90w"
+                        aria-labelledby="example-custom-modal-styling-title"
+                    >
+                        <Modal.Header>
+                            <Row className="d-flex w-100 m-0">
+                                <h4 className='ml-3 w-50'>Select Wallet </h4>
+                                <GrClose className="p-0 modal-close-btn" onClick={() => setIsOpen(false)} />
+                            </Row>
+                        </Modal.Header>
+                        <Modal.Body className="">
+                            <Row className="d-flex w-100 m-0">
+                                <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getMetaMaskProvider()); setIsOpen(false) }}>Metamask</Button>
+                                {/* <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getWalletConnectProvider()); setIsOpen(false) }}>Wallet Connect</Button> */}
+                                <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getCoinbaseWalletProvider()); setIsOpen(false) }}>CoinBase</Button>
+                            </Row>
+                        </Modal.Body>
+                    </Modal>
+                }
+            </div>
             <ToastContainer position="top-right" />
             {
                 isLoading && <div className="w-100 h-100 loading">

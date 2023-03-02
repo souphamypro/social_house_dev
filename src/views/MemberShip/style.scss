@@ -1,93 +1,104 @@
 .access-keys {
-  padding-top: 80px;
+    padding-top: 80px;
 }
 
 .green-key {
-  background: #ddffd1;
+    background: #ddffd1;
 }
 
 .gold-key {
-  background: #fffbce;
+    background: #fffbce;
 }
 
 .rose-gold-key {
-  background: #ffe2d7;
+    background: #ffe2d7;
 }
 
 .platinum-key {
-  background: #eaeaea;
+    background: #eaeaea;
 }
 
 .black-key {
-  background: #b6b3b3;
+    background: #b6b3b3;
 }
 
 .access-key-img {
-  text-align: right;
+    text-align: right;
 }
 
 .access-key-img img {
-  width: 250px;
+    width: 250px;
 }
 
 .access-key-item ul li {
-  font-family    : DMSans;
-  font-size      : calc(0.5rem + 1.2vmin);
-  font-weight    : 400;
-  font-style     : normal;
-  text-decoration: none;
+    font-family    : DMSans;
+    font-size      : calc(0.5rem + 1.2vmin);
+    font-weight    : 400;
+    font-style     : normal;
+    text-decoration: none;
 }
 
 @media screen and (max-width: 767px) {
-  .access-key-item ul li {
-    font-size: calc(0.5rem + 1vmin)
-  }
+    .access-key-item ul li {
+        font-size: calc(0.5rem + 1vmin)
+    }
 }
 
 // Click Button Effect
 .btn-membership button {
-  cursor          : pointer;
-  position        : relative;
-  overflow        : hidden;
-  background-color: transparent;
-  border          : none;
-  outline         : none;
-  color           : white;
-  transition      : 0.2s;
+    cursor          : pointer;
+    position        : relative;
+    overflow        : hidden;
+    background-color: transparent;
+    border          : none;
+    outline         : none;
+    color           : white;
+    transition      : 0.2s;
 
-  &::before {
-    content   : '';
-    height    : 3px;
-    width     : 0;
-    left      : 0;
-    bottom    : 0;
-    position  : absolute;
-    background: white;
-    transition: 0.4s;
-  }
-
-  &:hover {
     &::before {
-      width: 100%;
+        content   : '';
+        height    : 3px;
+        width     : 0;
+        left      : 0;
+        bottom    : 0;
+        position  : absolute;
+        background: white;
+        transition: 0.4s;
     }
-  }
 
-  &:active {
-    background-color: rgba(255, 255, 255, .1);
-  }
+    &:hover {
+        &::before {
+            width: 100%;
+        }
+    }
+
+    &:active {
+        background-color: rgba(255, 255, 255, .1);
+    }
 }
 
 .btn-membership span.ripple {
-  background-color: rgb(225, 248, 255);
-  border-radius   : 50%;
-  position        : absolute;
-  transform       : scale(0);
-  animation       : ripple .5s linear forwards;
+    background-color: rgb(225, 248, 255);
+    border-radius   : 50%;
+    position        : absolute;
+    transform       : scale(0);
+    animation       : ripple .5s linear forwards;
 }
 
 @keyframes ripple {
-  to {
-    transform: scale(1);
-    opacity  : 0;
-  }
+    to {
+        transform: scale(1);
+        opacity  : 0;
+    }
+}
+
+// Modal
+.modal-close-btn {
+    width       : 2rem !important;
+    margin-right: 0px !important;
+    margin-left : auto !important;
+}
+
+.m-0 {
+    margin: 0px !important;
 }
