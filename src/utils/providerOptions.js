@@ -1,21 +1,21 @@
 import WalletConnect from "@walletconnect/web3-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
+import Web3Modal from "web3modal";
+import {isMobile} from 'react-device-detect';
 
-// export const providerOptions = {
-//     walletlink: {
-//         package: CoinbaseWalletSDK, // Required
-//         options: {
-//             appName: "Web 3 Modal Demo", // Required
-//             infuraId: process.env.REACT_APP_INFURAKEY // Required unless you provide a JSON RPC url; see `rpc` below
-//         }
-//     },
-//     walletconnect: {
-//         package: WalletConnect, // required
-//         options: {
-//             infuraId: process.env.REACT_APP_INFURAKEY // required
-//         }
-//     }
-// };
+const providerOptions = {
+    walletconnect: {
+        package: WalletConnect, // required
+        options: {
+            infuraId: process.env.REACT_APP_INFURAKEY // required
+        }
+    }
+};
+
+const web3Modal = new Web3Modal({
+    cacheProvider: false,
+    providerOptions: providerOptions // required
+});
 
 const APP_NAME = "My Demo App";
 const APP_LOGO_URL = "https://example.com/logo.png";
@@ -34,11 +34,16 @@ export const getCoinbaseWalletProvider = () => {
 };
 
 // MetaMask Provider
+
 export const getMetaMaskProvider = () => {
     // We will prefer a provider where the property `isMetaMask` is set to true
-    return (
-        window.ethereum?.providers?.find((p) => !!p.isMetaMask) ?? window.ethereum
-    );
+    if (isMobile) {
+        return web3Modal.connect();
+    } else {
+        return (
+            window.ethereum?.providers?.find((p) => !!p.isMetaMask) ?? window.ethereum
+        );
+    }
     // const metamaskWallet = new WalletConnect({
     //     appName: APP_NAME,
     //     appLogoUrl: APP_LOGO_URL,
@@ -50,6 +55,5 @@ export const getMetaMaskProvider = () => {
 
 // WalletConnect Provider
 export const getWalletConnectProvider = () => {
-    const newWalletconnect = new WalletConnect({infuraId: INFURA_ID});
-    return newWalletconnect.makeWeb3Provider();
+    return new WalletConnect({infuraId: INFURA_ID});
 };

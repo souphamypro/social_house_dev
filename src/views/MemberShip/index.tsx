@@ -26,11 +26,6 @@ import CheckoutModal from '../../components/CheckoutModal';
 import NavBar from '../../components/NavBar';
 import contractABI from "../../utils/abi.json";
 
-// const web3Modal = new Web3Modal({
-//     cacheProvider: false,
-//     providerOptions: providerOptions // required
-// });
-
 interface StateProps {
     isAuthenticated: boolean;
     session: string | null;
@@ -273,7 +268,6 @@ const MemberShip: FC = () => {
                         <Modal.Body className="">
                             <Row className="d-flex w-100 m-0">
                                 <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getMetaMaskProvider()); setIsOpen(false) }}>Metamask</Button>
-                                <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getWalletConnectProvider()); setIsOpen(false) }}>wallet connect</Button>
                                 <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getCoinbaseWalletProvider()); setIsOpen(false) }}>CoinBase</Button>
                             </Row>
                         </Modal.Body>
