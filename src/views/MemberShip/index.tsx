@@ -85,62 +85,51 @@ const MemberShip: FC = () => {
     const connectWallet = async () => {
         try {
             // console.log("Settings connect accounts : ");
-            if (typeof window.ethereum === "undefined") {
-                toast.error("Error - MetaMask is not installed!", { position: "bottom-right", autoClose: 1500 });
-            } else {
-                // setIsLoading(true);
-                var provider = await web3Modal.connect();
-                var library = new ethers.providers.Web3Provider(provider);
-                var accounts = await library.listAccounts();
-                const network = await library.getNetwork();
-                // console.log("Settings connect accounts : ", accounts, network, props.chainId);
-                let netowrkInfo = goerli_info;
-                if (process.env.REACT_APP_NETWORK === "homestead") {
-                    netowrkInfo = mainnet_info;
-                }
-                if (network.chainId.toString() !== netowrkInfo.chainId) {
-                    if (window.ethereum) {
-                        let chainId = ethers.utils.hexStripZeros(ethers.utils.hexlify(parseInt(netowrkInfo.chainId)));
+            // if (typeof window.ethereum === "undefined") {
+            //     toast.error("Error - MetaMask is not installed!", { position: "bottom-right", autoClose: 1500 });
+            // } else {
+            // setIsLoading(true);
+            var provider = await web3Modal.connect();
+            var library = new ethers.providers.Web3Provider(provider);
+            var accounts = await library.listAccounts();
+            const network = await library.getNetwork();
+            // console.log("Settings connect accounts : ", accounts, network, props.chainId);
+            let netowrkInfo = goerli_info;
+            if (process.env.REACT_APP_NETWORK === "homestead") {
+                netowrkInfo = mainnet_info;
+            }
+            if (network.chainId.toString() !== netowrkInfo.chainId) {
+                if (window.ethereum) {
+                    let chainId = ethers.utils.hexStripZeros(ethers.utils.hexlify(parseInt(netowrkInfo.chainId)));
+                    try {
+                        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainId }] });
+                    } catch (error) {
                         try {
-                            await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainId }] });
+                            await window.ethereum.request({
+                                method: "wallet_addEthereumChain",
+                                params: [{
+                                    chainId: chainId,
+                                    rpcUrls: [netowrkInfo.rpcURL],
+                                    chainName: netowrkInfo.chainName,
+                                    nativeCurrency: {
+                                        name: netowrkInfo.name,
+                                        symbol: netowrkInfo.symbolName,
+                                        decimals: netowrkInfo.decimals
+                                    },
+                                    blockExplorerUrls: [netowrkInfo.explorerURL]
+                                }]
+                            });
                         } catch (error) {
-                            try {
-                                await window.ethereum.request({
-                                    method: "wallet_addEthereumChain",
-                                    params: [{
-                                        chainId: chainId,
-                                        rpcUrls: [netowrkInfo.rpcURL],
-                                        chainName: netowrkInfo.chainName,
-                                        nativeCurrency: {
-                                            name: netowrkInfo.name,
-                                            symbol: netowrkInfo.symbolName,
-                                            decimals: netowrkInfo.decimals
-                                        },
-                                        blockExplorerUrls: [netowrkInfo.explorerURL]
-                                    }]
-                                });
-                            } catch (error) {
-                                console.log("settings.js connect add_chain error = : ", error);
-                                setIsLoading(false);
-                                return;
-                            }
-                        }
-                        provider = await web3Modal.connect();
-                        library = new ethers.providers.Web3Provider(provider);
-                        accounts = await library.listAccounts();
-                        // console.log(accounts);
-                        setIsLoading(false);
-                        if (accounts) {
-                            // setAccount(accounts[0]);
-                            authDispatcher.connectWallet(accounts[0]);
-                            toast.success("Success to Connect Wallet!", { autoClose: 1500 });
-                        } else {
-                            toast.error("Failed to Connect Wallet!", { autoClose: 1500 });
+                            console.log("settings.js connect add_chain error = : ", error);
+                            setIsLoading(false);
+                            return;
                         }
                     }
-                } else {
-                    setIsLoading(false);
+                    provider = await web3Modal.connect();
+                    library = new ethers.providers.Web3Provider(provider);
+                    accounts = await library.listAccounts();
                     // console.log(accounts);
+                    setIsLoading(false);
                     if (accounts) {
                         // setAccount(accounts[0]);
                         authDispatcher.connectWallet(accounts[0]);
@@ -149,7 +138,18 @@ const MemberShip: FC = () => {
                         toast.error("Failed to Connect Wallet!", { autoClose: 1500 });
                     }
                 }
+            } else {
+                setIsLoading(false);
+                // console.log(accounts);
+                if (accounts) {
+                    // setAccount(accounts[0]);
+                    authDispatcher.connectWallet(accounts[0]);
+                    toast.success("Success to Connect Wallet!", { autoClose: 1500 });
+                } else {
+                    toast.error("Failed to Connect Wallet!", { autoClose: 1500 });
+                }
             }
+            // }
         } catch (error) {
             setIsLoading(false);
             console.log("MemberShip index connectWallet error : ", error);
