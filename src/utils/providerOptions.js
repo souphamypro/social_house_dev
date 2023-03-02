@@ -37,13 +37,15 @@ export const getCoinbaseWalletProvider = () => {
 
 export const getMetaMaskProvider = () => {
     // We will prefer a provider where the property `isMetaMask` is set to true
-    if (isMobile) {
-        return web3Modal.connect();
-    } else {
-        return (
-            window.ethereum?.providers?.find((p) => !!p.isMetaMask) ?? window.ethereum
-        );
-    }
+    return web3Modal.connect();
+    // console.log(isMobile);
+    // if (isMobile) {
+    //     return web3Modal.connect();
+    // } else {
+    //     return (
+    //         window.ethereum?.providers?.find((p) => !!p.isMetaMask) ?? window.ethereum
+    //     );
+    // }
     // const metamaskWallet = new WalletConnect({
     //     appName: APP_NAME,
     //     appLogoUrl: APP_LOGO_URL,
