@@ -50,7 +50,6 @@ export const getMetaMaskProvider = () => {
 
 // WalletConnect Provider
 export const getWalletConnectProvider = () => {
-    return new WalletConnect({
-        infuraId: INFURA_ID
-    });
+    const newWalletconnect = new WalletConnect({infuraId: INFURA_ID});
+    return newWalletconnect.makeWeb3Provider();
 };
