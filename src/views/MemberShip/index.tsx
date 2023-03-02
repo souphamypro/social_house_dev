@@ -86,7 +86,7 @@ const MemberShip: FC = () => {
 
     const connectWallet = async () => {
         try {
-            // console.log("Settings connect accounts : ");
+            console.log("Membership connect accounts : ");
             // if (typeof window.ethereum === "undefined") {
             //     toast.error("Error - MetaMask is not installed!", { position: "bottom-right", autoClose: 1500 });
             // } else {
