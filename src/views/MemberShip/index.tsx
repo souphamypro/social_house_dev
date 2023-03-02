@@ -53,7 +53,7 @@ const MemberShip: FC = () => {
     const [signInModalOpen, setSignInModalOpen] = useState(false);
 
     const [provider, setProvider] = useState<any>();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [isExist, setIsExist] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -90,6 +90,7 @@ const MemberShip: FC = () => {
         try {
             setProvider(currentProvider);
             // Get accounts for connected wallet
+            console.log(currentProvider);
             const accounts = await currentProvider.request({ method: "eth_requestAccounts" });
             authDispatcher.connectWallet(accounts[0]);
             console.log(" =========== ", accounts);
@@ -268,6 +269,7 @@ const MemberShip: FC = () => {
                         <Modal.Body className="">
                             <Row className="d-flex w-100 m-0">
                                 <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getMetaMaskProvider()); setIsOpen(false) }}>Metamask</Button>
+                                <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getWalletConnectProvider()); setIsOpen(false) }}>Wallet Connect</Button>
                                 <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getCoinbaseWalletProvider()); setIsOpen(false) }}>CoinBase</Button>
                             </Row>
                         </Modal.Body>
