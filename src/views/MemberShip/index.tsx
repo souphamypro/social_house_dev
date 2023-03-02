@@ -273,7 +273,7 @@ const MemberShip: FC = () => {
                         <Modal.Body className="">
                             <Row className="d-flex w-100 m-0">
                                 <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getMetaMaskProvider()); setIsOpen(false) }}>Metamask</Button>
-                                {/* <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getWalletConnectProvider()); setIsOpen(false) }}>Wallet Connect</Button> */}
+                                <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getWalletConnectProvider()); setIsOpen(false) }}>wallet connect</Button>
                                 <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getCoinbaseWalletProvider()); setIsOpen(false) }}>CoinBase</Button>
                             </Row>
                         </Modal.Body>

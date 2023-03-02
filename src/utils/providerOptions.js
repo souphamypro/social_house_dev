@@ -39,6 +39,13 @@ export const getMetaMaskProvider = () => {
     return (
         window.ethereum?.providers?.find((p) => !!p.isMetaMask) ?? window.ethereum
     );
+    // const metamaskWallet = new WalletConnect({
+    //     appName: APP_NAME,
+    //     appLogoUrl: APP_LOGO_URL,
+    //     darkMode: false,
+    //     overrideIsMetaMask: false
+    // });
+    // return metamaskWallet.makeWeb3Provider(INFURA_RPC_URL, "5");
 };
 
 // WalletConnect Provider
