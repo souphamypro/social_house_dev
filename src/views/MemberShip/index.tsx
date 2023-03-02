@@ -51,6 +51,8 @@ const MemberShip: FC = () => {
     const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
     const [signInModalOpen, setSignInModalOpen] = useState(false);
 
+    const [provider, setProvider] = useState<any>();
+
     const [isExist, setIsExist] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -93,6 +95,7 @@ const MemberShip: FC = () => {
             var library = new ethers.providers.Web3Provider(provider);
             var accounts = await library.listAccounts();
             const network = await library.getNetwork();
+            setProvider(provider);
             // console.log("Settings connect accounts : ", accounts, network, props.chainId);
             let netowrkInfo = goerli_info;
             if (process.env.REACT_APP_NETWORK === "homestead") {
@@ -128,7 +131,7 @@ const MemberShip: FC = () => {
                     provider = await web3Modal.connect();
                     library = new ethers.providers.Web3Provider(provider);
                     accounts = await library.listAccounts();
-                    // console.log(accounts);
+                    setProvider(provider);
                     setIsLoading(false);
                     if (accounts) {
                         // setAccount(accounts[0]);
@@ -231,6 +234,36 @@ const MemberShip: FC = () => {
             console.log("MemberShip UseEffect updateExist error = : ", error);
         });
     }, [isAuthenticated, session, walletAddress, walletAddressPaper]);
+
+    useEffect(() => {
+        if (provider?.on) {
+            const handleAccountsChanged = (accounts: any) => {
+                // setAccounts(accounts);
+                toast.success(accounts.toString(), { autoClose: 4000 });
+            };
+
+            const handleChainChanged = (chainId: any) => {
+                toast.success(chainId.toString(), { autoClose: 4000 });
+                // setChainId(chainId);
+            };
+
+            const handleDisconnect = () => {
+                // disconnect();
+            };
+
+            provider.on("accountsChanged", handleAccountsChanged);
+            provider.on("chainChanged", handleChainChanged);
+            provider.on("disconnect", handleDisconnect);
+
+            return () => {
+                if (provider.removeListener) {
+                    provider.removeListener("accountsChanged", handleAccountsChanged);
+                    provider.removeListener("chainChanged", handleChainChanged);
+                    provider.removeListener("disconnect", handleDisconnect);
+                }
+            };
+        }
+    }, [provider]);
 
     return (
         <>
