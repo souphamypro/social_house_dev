@@ -80,7 +80,7 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
                 }
             } catch (err: any) {
                 console.log("Login handleLogin err : ", err.toString());
-                setErrorMag("Invalid Parameters!");
+                setErrorMag("Authentication failed!");
             }
         }
     }

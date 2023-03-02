@@ -36,8 +36,12 @@ export const authReducer: Reducer<InitialState, DispatchAction> = (state = initi
         sessionStorage.setItem("isAuthenticated", action.payload.walletAddress || "");
         return { ...state, session: action.payload.session || null, isAuthenticated: true };
     } else if (action.type === ActionType.LogOut) {
+        sessionStorage.removeItem("isAuthenticated");
+        sessionStorage.removeItem("emailPaper");
+        sessionStorage.removeItem("walletAddress");
+        sessionStorage.removeItem("walletAddressPaper");
         sessionStorage.clear();
-        return { ...state, isAuthenticated: false, walletAddress: "" };
+        return { ...state, isAuthenticated: false, walletAddress: "", walletAddressPaper: "", emailPaper: "" };
     } else if (action.type === ActionType.ConnectWallet) {
         sessionStorage.setItem("walletAddress", action.payload.walletAddress || "");
         return { ...state, walletAddress: action.payload.walletAddress || "" };
@@ -51,7 +55,7 @@ export const authReducer: Reducer<InitialState, DispatchAction> = (state = initi
     } else if (action.type === ActionType.LogOutPaper) {
         sessionStorage.removeItem("emailPaper");
         sessionStorage.removeItem("walletAddressPaper");
-        return { ...state, walletAddressPaper: action.payload.walletAddressPaper || "", emailPaper: action.payload.emailPaper || "" };
+        return { ...state, walletAddressPaper: "", emailPaper: "" };
     } else return state;
 };
 
