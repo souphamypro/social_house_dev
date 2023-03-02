@@ -3,7 +3,7 @@ import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import Web3Modal from "web3modal";
 import {isMobile} from 'react-device-detect';
 
-const providerOptions = {
+export const providerOptions = {
     walletconnect: {
         package: WalletConnect, // required
         options: {
@@ -34,13 +34,15 @@ export const getCoinbaseWalletProvider = () => {
 };
 
 // MetaMask Provider
-export const getMetaMaskProvider = () => {
+export const getMetaMaskProvider = async () => {
     // We will prefer a provider where the property `isMetaMask` is set to true
     // return web3Modal.connect();
     // return new WalletConnect({infuraId: INFURA_ID});
+
     // console.log(isMobile);
     // if (isMobile) {
-        // return web3Modal.connect();
+    //     let provider = await web3Modal.connect();
+    //     return provider;
     // } else {
         return (
             window.ethereum?.providers?.find((p) => !!p.isMetaMask) ?? window.ethereum

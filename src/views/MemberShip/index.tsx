@@ -20,11 +20,17 @@ import { goerli_info, mainnet_info, tokenIDs, linkedURL } from '../../utils/netw
 import {
     getCoinbaseWalletProvider,
     getMetaMaskProvider,
-    getWalletConnectProvider
+    getWalletConnectProvider,
+    providerOptions,
 } from "../../utils/providerOptions";
 import CheckoutModal from '../../components/CheckoutModal';
 import NavBar from '../../components/NavBar';
 import contractABI from "../../utils/abi.json";
+
+const web3Modal = new Web3Modal({
+    cacheProvider: false,
+    providerOptions: providerOptions // required
+});
 
 interface StateProps {
     isAuthenticated: boolean;
@@ -98,6 +104,11 @@ const MemberShip: FC = () => {
             console.log(" =========== ", error);
         }
     };
+
+    const connectWithWalletConnect = async () => {
+        var provider = await web3Modal.connect();
+        connectWithProvider(provider);
+    }
 
     const connectWallet = async () => {
         try {
@@ -269,7 +280,7 @@ const MemberShip: FC = () => {
                         <Modal.Body className="">
                             <Row className="d-flex w-100 m-0">
                                 <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getMetaMaskProvider()); setIsOpen(false) }}>Metamask</Button>
-                                <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getWalletConnectProvider()); setIsOpen(false) }}>Wallet Connect</Button>
+                                <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithWalletConnect(); setIsOpen(false); }}>Wallet Connect</Button>
                                 <Button className="btn btn-lg btn-bg-success w-100 m-auto mt-2" variant="contained" onClick={() => { connectWithProvider(getCoinbaseWalletProvider()); setIsOpen(false) }}>CoinBase</Button>
                             </Row>
                         </Modal.Body>
