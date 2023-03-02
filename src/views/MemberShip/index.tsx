@@ -160,7 +160,7 @@ const MemberShip: FC = () => {
         }
     }
 
-    const disconnectWallet = async () => {
+    const disconnectWallet = () => {
         // setAccount("");
         authDispatcher.disconnectWallet();
         web3Modal.clearCachedProvider();
@@ -237,28 +237,23 @@ const MemberShip: FC = () => {
 
     useEffect(() => {
         if (provider?.on) {
+            toast.success(provider.on.toString(), { autoClose: 4000 });
             const handleAccountsChanged = (accounts: any) => {
-                // setAccounts(accounts);
+                console.log("MemberShip useEffect : accounts = : ", accounts);
                 toast.success(accounts.toString(), { autoClose: 4000 });
             };
 
-            const handleChainChanged = (chainId: any) => {
-                toast.success(chainId.toString(), { autoClose: 4000 });
-                // setChainId(chainId);
-            };
-
             const handleDisconnect = () => {
-                // disconnect();
+                console.log("MemberShip useEffect : handleDisconnect = : ");
+                disconnectWallet();
             };
 
             provider.on("accountsChanged", handleAccountsChanged);
-            provider.on("chainChanged", handleChainChanged);
             provider.on("disconnect", handleDisconnect);
 
             return () => {
                 if (provider.removeListener) {
                     provider.removeListener("accountsChanged", handleAccountsChanged);
-                    provider.removeListener("chainChanged", handleChainChanged);
                     provider.removeListener("disconnect", handleDisconnect);
                 }
             };
