@@ -86,7 +86,7 @@ const MemberShip: FC = () => {
 
     const connectWallet = async () => {
         try {
-            console.log("Membership connect accounts : ");
+            console.log("Membership connectWallet : ");
             var provider = await web3Modal.connect();
             var library = new ethers.providers.Web3Provider(provider);
             var accounts = await library.listAccounts();
@@ -99,10 +99,10 @@ const MemberShip: FC = () => {
             if (network.chainId.toString() !== netowrkInfo.chainId) {
                 let chainId = ethers.utils.hexStripZeros(ethers.utils.hexlify(parseInt(netowrkInfo.chainId)));
                 try {
-                    // console.log("Membership connect chainId : ", chainId);
+                    console.log("Membership connect chainId : ", chainId);
                     await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainId }] });
                 } catch (error) {
-                    console.log("Membership connect chainId : ", chainId);
+                    console.log("Membership connect chainId error : ", chainId, error);
                     try {
                         await provider.request({
                             method: "wallet_addEthereumChain",
@@ -127,7 +127,7 @@ const MemberShip: FC = () => {
                 library = new ethers.providers.Web3Provider(provider);
                 accounts = await library.listAccounts();
                 setProvider(provider);
-                console.log("Membership connect accounts : ", accounts);
+                console.log("Membership connect accounts 1 : ", accounts);
                 if (accounts) {
                     authDispatcher.connectWallet(accounts[0]);
                     await checkNFTExist(accounts[0]);
@@ -137,7 +137,7 @@ const MemberShip: FC = () => {
                 }
             } else {
                 setIsLoading(false);
-                console.log("Membership connect accounts : ", accounts);
+                console.log("Membership connect accounts 2 : ", accounts);
                 if (accounts) {
                     authDispatcher.connectWallet(accounts[0]);
                     await checkNFTExist(accounts[0]);
@@ -212,7 +212,7 @@ const MemberShip: FC = () => {
             return data;
         }
         const updateExist = async () => {
-            console.log(web3Modal.cachedProvider);
+            console.log("MemberShip useEffect web3Modal.cachedProvider = : ", web3Modal.cachedProvider);
             if (web3Modal.cachedProvider) {
                 await connectWallet();
             }
