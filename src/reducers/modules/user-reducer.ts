@@ -47,7 +47,8 @@ export const authReducer: Reducer<InitialState, DispatchAction> = (state = initi
         return { ...state, walletAddress: action.payload.walletAddress || "" };
     } else if (action.type === ActionType.DisconnectWallet) {
         sessionStorage.removeItem("walletAddress");
-        return { ...state, walletAddress: "" };
+        sessionStorage.removeItem("walletAddressPaper");
+        return { ...state, walletAddress: "", walletAddressPaper: "" };
     } else if (action.type === ActionType.LoginSuccessPaper) {
         sessionStorage.setItem("emailPaper", action.payload.emailPaper || "");
         sessionStorage.setItem("walletAddressPaper", action.payload.walletAddressPaper || "");
