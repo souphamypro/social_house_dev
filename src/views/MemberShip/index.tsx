@@ -245,9 +245,17 @@ const MemberShip: FC = () => {
                 }
             };
 
-            // const handleConnect = () => {
-            //     console.log("MemberShip useEffect connect");
-            // };
+            const handleChainChanged = (_hexChainId: string) => {
+                let netowrkInfo = goerli_info;
+                if (process.env.REACT_APP_NETWORK === "homestead") {
+                    netowrkInfo = mainnet_info;
+                }
+                let chainId = ethers.utils.hexStripZeros(ethers.utils.hexlify(parseInt(netowrkInfo.chainId)));
+                console.log("MemberShip useEffect chainChanged = : ", _hexChainId, chainId);
+                if (_hexChainId !== chainId) {
+                    disconnectWallet();
+                }
+            };
 
             const handleDisconnect = () => {
                 console.log("MemberShip useEffect disconnect");
@@ -255,13 +263,14 @@ const MemberShip: FC = () => {
             };
 
             provider.on("accountsChanged", handleAccountsChanged);
+            provider.on("chainChanged", handleChainChanged);
             provider.on("disconnect", handleDisconnect);
 
             return () => {
                 if (provider.removeListener) {
                     provider.removeListener("accountsChanged", handleAccountsChanged);
                     provider.removeListener("disconnect", handleDisconnect);
-                    // provider.removeListener("connect", handleConnect);
+                    provider.removeListener("chainChanged", handleChainChanged);
                 }
             };
         }
