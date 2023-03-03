@@ -6,7 +6,7 @@ export const goerli_info = {
     decimals: 18,
     explorerURL: "https://goerli.etherscan.io",
     chainName: "Goerli Test",
-    chainTitle: "Goerli",
+    chainTitle: "goerli",
     infuraNetwork : "goerli",
     nftContractAddress: "0xe400f88efFAaB4Aa94726BAf812538C2ad0e3706"
 }
@@ -19,7 +19,7 @@ export const mainnet_info = {
     decimals: 18,
     explorerURL: "https://etherscan.io",
     chainName: "Ethereum Mainnet",
-    chainTitle: "Ethereum",
+    chainTitle: "mainnet",
     infuraNetwork : "homestead",
     nftContractAddress: "0x513b75190bB0873792a6A678b65A4E6679f52e97"
 }
