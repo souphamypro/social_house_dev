@@ -235,16 +235,19 @@ const MemberShip: FC = () => {
 
     useEffect(() => {
         if (provider?.on) {
-            const handleAccountsChanged = (accounts: any) => {
+            const handleAccountsChanged = async (accounts: any) => {
                 console.log("MemberShip useEffect accountsChanged", accounts);
                 if (accounts.length === 0) {
                     disconnectWallet();
+                } else if (accounts[0] !== walletAddress) {
+                    authDispatcher.connectWallet(accounts[0]);
+                    await checkNFTExist(accounts[0]);
                 }
             };
 
-            const handleConnect = () => {
-                console.log("MemberShip useEffect connect");
-            };
+            // const handleConnect = () => {
+            //     console.log("MemberShip useEffect connect");
+            // };
 
             const handleDisconnect = () => {
                 console.log("MemberShip useEffect disconnect");
@@ -258,7 +261,7 @@ const MemberShip: FC = () => {
                 if (provider.removeListener) {
                     provider.removeListener("accountsChanged", handleAccountsChanged);
                     provider.removeListener("disconnect", handleDisconnect);
-                    provider.removeListener("connect", handleConnect);
+                    // provider.removeListener("connect", handleConnect);
                 }
             };
         }
