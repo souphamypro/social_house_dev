@@ -1,4 +1,5 @@
 import { FC, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { HashLink as Link } from 'react-router-hash-link';
 import { useSelector, useDispatch } from "react-redux";
 import { InitialState, AuthDispatcher } from "../../reducers/modules/user-reducer";
@@ -22,7 +23,7 @@ const NavBar: FC<IJoinNow> = ({ setCheckoutModalOpen, setSignInModalOpen }) => {
             isAuthenticated: state.isAuthenticated
         }
     });
-
+    const navigate = useNavigate();
     const [active, setActive] = useState("active");
     const onClickNav = () => {
         if (active === "active") {
@@ -49,7 +50,7 @@ const NavBar: FC<IJoinNow> = ({ setCheckoutModalOpen, setSignInModalOpen }) => {
                         <li className='d-flex d-md-none'><a href="https://apps.apple.com/us/app/apollo-id/id1552644962" className="link">Member Portal</a></li>
                         <li className='d-flex d-md-none'><Link onClick={() => { setCheckoutModalOpen(true) }} className="link" to='#'>JOIN NOW</Link></li>
                         {
-                            isAuthenticated && <li className='d-flex d-md-none'><Link onClick={() => { authDispatcher.logOut() }} className="link" to='#'>Sign Out</Link></li>
+                            isAuthenticated && <li className='d-flex d-md-none'><Link onClick={() => { authDispatcher.logOut(); }} className="link" to='#'>Sign Out</Link></li>
                         }
                         {
                             !isAuthenticated && <li className='d-flex d-md-none'><Link onClick={() => { setSignInModalOpen(true) }} className="link" to='#'>Sign In</Link></li>

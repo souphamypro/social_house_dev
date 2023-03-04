@@ -3,7 +3,8 @@ import { Row, Col, Container } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
-
+import { CircularProgress } from "@material-ui/core";
+import validator from "validator";
 import { useDispatch } from "react-redux";
 import { AuthDispatcher } from "../../reducers/modules/user-reducer";
 import './style.scss'
@@ -18,6 +19,7 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
     const dispatch = useDispatch();
     const authDispatcher = new AuthDispatcher(dispatch);
 
+    const [isLoading, setIsLoading] = useState(false);
     const [modalFlag, setModalFlag] = useState(0);
     const [useremail, setUseremail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,6 +28,7 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
     const [errorMag, setErrorMag] = useState("");
     const [email_invalid, setUserEmail_invalid] = useState(false);
     const [password_invalid, setPassword_invalid] = useState(false);
+    const [password_strong_invalid, setPassword_strong_invalid] = useState(false);
     const [confirm_invalid, setConfirm_invalid] = useState(false);
     const [show_confirm_password, setShow_confirm_password] = useState(false);
     const [confirm_password, setConfirm_password] = useState("");
@@ -33,6 +36,7 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
     const restInvalidFlag = () => {
         setErrorMag("");
         setUserEmail_invalid(false);
+        setPassword_strong_invalid(false);
         setPassword_invalid(false);
         setConfirm_invalid(false);
     }
@@ -59,45 +63,62 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
     }
 
     const handleLogin = async () => {
+        setIsLoading(true);
         restInvalidFlag();
         if (useremail === "") {
+            setIsLoading(false);
             setUserEmail_invalid(true);
         } else if (password === "" || password.toString().length < 4) {
+            setIsLoading(false);
             setPassword_invalid(true);
         } else {
             setPassword_invalid(false);
             try {
                 let response = await axios.post(process.env.REACT_APP_BACKURL + "user/login", { email: useremail, password: password });
                 console.log("Login handleLogin response : ", response);
+                setIsLoading(false);
                 if (response.data.status) {
                     sessionStorage.setItem("token", response.data.data);
                     sessionStorage.setItem("email", response.data.email);
                     authDispatcher.loginSuccess(response.data.data);
                     setSignInModalOpen(false);
-                    navigate("/app/memberShip");
+                    navigate("app/memberShip");
                 } else {
                     setErrorMag(response.data.data);
                 }
             } catch (err: any) {
+                setIsLoading(false);
                 console.log("Login handleLogin err : ", err.toString());
-                setErrorMag("Authentication failed!");
+                if (err.toString().includes("Network Error")) {
+                    setErrorMag("Network Error!");
+                } else {
+                    setErrorMag("Authentication failed!");
+                }
             }
         }
     }
 
     const handleRegister = async (e: any) => {
+        setIsLoading(true);
         restInvalidFlag();
         e.preventDefault();
         if (useremail === "") {
+            setIsLoading(false);
             setUserEmail_invalid(true);
-        } else if (password === "" || password.toString().length < 4) {
+        } else if (password === "") {
+            setIsLoading(false);
             setPassword_invalid(true);
+        } else if (validator.isStrongPassword(password, { minUppercase: 1, minNumbers: 1, minSymbols: 1 })) {
+            setIsLoading(false);
+            setPassword_strong_invalid(true);
         } else if (password !== confirm_password) {
+            setIsLoading(false);
             setConfirm_invalid(true);
         }
         else {
-            let response = await axios.post(process.env.REACT_APP_BACKURL + "user/register", { email: useremail, password: password });
             try {
+                let response = await axios.post(process.env.REACT_APP_BACKURL + "user/register", { email: useremail, password: password });
+                setIsLoading(false);
                 console.log("AuthModal Register response = : ", response);
                 if (response.data.status) {
                     // sessionStorage.setItem("email", response.data.data);
@@ -107,6 +128,7 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
                     // toast.error("Error - Invalid Database Connection!", {autoClose: 1500});
                 }
             } catch (error) {
+                setIsLoading(false);
                 console.log("AuthModal Register error : ", error);
                 // toast.error("Error - Invalid Database Connection!", {autoClose: 1500});
             }
@@ -115,8 +137,10 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
 
     const resend_confirm_email = async (e: any) => {
         e.preventDefault();
+        setIsLoading(true);
         // let email = sessionStorage.getItem("email");
         let response = await axios.post(process.env.REACT_APP_BACKURL + "user/resend-confirm", { email: useremail });
+        setIsLoading(false);
         try {
             if (response.data.status) {
                 sessionStorage.setItem("email", response.data.data);
@@ -132,7 +156,9 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
 
     const handleUpdatePassword = async (e: any) => {
         e.preventDefault();
+        setIsLoading(true);
         let response = await axios.post(process.env.REACT_APP_BACKURL + "user/forget-password", { email: useremail });
+        setIsLoading(false);
         try {
             if (response.data.status) {
                 setErrorMag("Sent password rest link to email!");
@@ -151,6 +177,13 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
 
     return (
         <div className="modalBackground">
+            {
+                isLoading && <div className="w-100 h-100 loading">
+                    <Row className="loading-progress-area">
+                        <CircularProgress size={100} className="text-color" />
+                    </Row>
+                </div>
+            }
             <div className="checkout-modalContainer">
                 <button className="titleCloseBtn"
                     onClick={() => {
@@ -209,6 +242,9 @@ const AuthModal: FC<IProps> = ({ setSignInModalOpen }) => {
                                 </div>
                                 {
                                     password_invalid && <p className="text-red mb-0">Please input valid password!</p>
+                                }
+                                {
+                                    password_strong_invalid && <p className="text-red mb-0">Please input strong password!</p>
                                 }
                             </div>
                         }

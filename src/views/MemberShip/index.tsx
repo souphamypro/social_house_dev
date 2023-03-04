@@ -213,9 +213,9 @@ const MemberShip: FC = () => {
         }
         const updateExist = async () => {
             console.log("MemberShip useEffect web3Modal.cachedProvider = : ", web3Modal.cachedProvider);
-            if (web3Modal.cachedProvider) {
-                await connectWallet();
-            }
+            // if (web3Modal.cachedProvider) {
+            //     await connectWallet();
+            // }
             if (walletAddressPaper !== "" && walletAddressPaper !== null) {
                 await checkNFTExist(walletAddressPaper);
             }
