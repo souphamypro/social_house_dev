@@ -335,7 +335,7 @@ const MemberShip: FC = () => {
                                     <Col lg="4" md="6" sm="12" xs="12" className='m-auto'>
                                         {
                                             (walletAddressPaper === "" || walletAddressPaper === null) ?
-                                                <PaperSDKProvider clientId={process.env.REACT_APP_PAPTER_CLIENT_ID} chainName="Goerli">
+                                                <PaperSDKProvider clientId={process.env.REACT_APP_PAPTER_CLIENT_ID} chainName="Ethereum">
                                                     <LoginWithPaper className="btn btn-bg-success btn-md text-white w-100" onSuccess={(code) => onLoginSuccess(code)} />
                                                 </PaperSDKProvider> : <Button variant="contained"
                                                     className="btn btn-lg btn-bg-danger w-100 m-auto"
